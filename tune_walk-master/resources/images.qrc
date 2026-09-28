@@ -1,0 +1,42 @@
+<RCC>
+  <qresource prefix="/">
+    <file>images/icon.png</file>
+    <file>images/973761776.png</file>
+    <file>images/973761776-removebg-preview.png</file>
+    <file>images/all_stretch.png</file>
+    <file>images/r_stretch-removebg-preview.png</file>
+    <file>images/r_stand.png</file>
+    <file>images/r_sit.png</file>
+    <file>images/r_gather-removebg-preview.png</file>
+    <file>images/outside_r-removebg-preview.png</file>
+    <file>images/outside_l-removebg-preview.png</file>
+    <file>images/all_outside.png</file>
+    <file>images/l_stretch-removebg-preview.png</file>
+    <file>images/l_stand.png</file>
+    <file>images/l_gather-removebg-preview.png</file>
+    <file>images/inside_r-removebg-preview.png</file>
+    <file>images/all_inside.png</file>
+    <file>images/all_gather.png</file>
+    <file>images/all_stand.png</file>
+    <file>images/all_sit.png</file>
+    <file>images/l_sit.png</file>
+    <file>images/inside_l4-removebg-preview.png</file>
+    <file>images/reset-removebg-preview.png</file>
+    <file>images/save-removebg-preview.png</file>
+    <file>images/open2-removebg-preview.png</file>
+    <file>images/download.png</file>
+    <file>images/update-vector-icon-260nw-725653546 (1).png</file>
+    <file>images/humanoidtypeA.PNG</file>
+    <file>images/Right gradient-.png</file>
+    <file>images/back_gradient.png</file>
+    <file>images/foward_gradient.png</file>
+    <file>images/left gradient+.png</file>
+    <file>images/left gradient-.png</file>
+    <file>images/right gradient+.png</file>
+    <file>images/Robot_Leg.png</file>
+    <file>images/Robot_Leg2.png</file>
+    <file>images/relaxing-walk.png</file>
+    <file>images/run.png</file>
+    <file>images/offset_leg.png</file>
+  </qresource>
+</RCC>
