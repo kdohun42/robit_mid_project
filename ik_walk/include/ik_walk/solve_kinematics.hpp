@@ -14,8 +14,8 @@
 #include <thread>
 #include <utility>
 
-#include "humanoid_interfaces/msg/IkAngleSimMsg.hpp"
-#include "humanoid_interfaces/msg/Tune2IkMsg.hpp"
+#include "humanoid_interfaces/msg/ik_angle_sim_msg.hpp"
+#include "humanoid_interfaces/msg/tune2_ik_msg.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 #include "dynamixel_hardware_msgs/msg/current_motor_status.hpp"

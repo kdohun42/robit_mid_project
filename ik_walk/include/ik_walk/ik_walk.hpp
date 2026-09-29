@@ -22,17 +22,18 @@
 #include "zmp_position_control.hpp"
 
 // MSG_HEADER //
-#include "humanoid_interfaces/msg/IkComMsg.hpp"
-#include "humanoid_interfaces/msg/IkCoordMsg.hpp"
-#include "humanoid_interfaces/msg/IkEndMsg.hpp"
-#include "humanoid_interfaces/msg/IkLTCMsg.hpp"
-#include "humanoid_interfaces/msg/IkPatternMsg.hpp"
+#include "humanoid_interfaces/msg/ik_com_msg.hpp"
+#include "humanoid_interfaces/msg/ik_coord_msg.hpp"
+#include "humanoid_interfaces/msg/ik_end_msg.hpp"
+#include "humanoid_interfaces/msg/ik_ltc_msg.hpp"
+#include "humanoid_interfaces/msg/ik_pattern_msg.hpp"
 // #include "humanoid_interfaces/msg/motion_operator.hpp"
 
-#include "humanoid_interfaces/msg/ImuMsg.hpp"
-#include "humanoid_interfaces/msg/Master2IkMsg.hpp"
-#include "humanoid_interfaces/msg/Tune2IkMsg.hpp"
-#include "humanoid_interfaces/msg/ZmpMsg.hpp"
+#include "humanoid_interfaces/msg/imu_msg.hpp"
+#include "humanoid_interfaces/msg/master2_ik_msg.hpp"
+#include "humanoid_interfaces/msg/tune2_ik_msg.hpp"
+#include "humanoid_interfaces/msg/zmp_msg.hpp"
+
 #include "std_msgs/msg/bool.hpp"
 #include "std_msgs/msg/string.hpp"
 #define X_LIMIT 50
