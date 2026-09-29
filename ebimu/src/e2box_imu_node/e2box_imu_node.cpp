@@ -366,10 +366,10 @@ double E2BoxIMUNode::applyLowPassFilter(double current, double previous)
     return previous + lpf_alpha_ * diff;
 }
 
-void E2BoxIMUNode::yawSetVisionCallback(const vision_interfaces::msg::PanAngleCompensation::SharedPtr msg)
-{
-    // yaw_offset_ = msg->target_yaw_deg - raw_yaw_deg_;
-}
+// void E2BoxIMUNode::yawSetVisionCallback(const vision_interfaces::msg::PanAngleCompensation::SharedPtr msg)
+// {
+//     // yaw_offset_ = msg->target_yaw_deg - raw_yaw_deg_;
+// }
 
 void E2BoxIMUNode::publishEulerData()
 {
