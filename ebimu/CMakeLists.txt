@@ -32,7 +32,7 @@ find_package(Qt5 COMPONENTS Widgets Core Gui Network REQUIRED)
 find_package(humanoid_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(vision_interfaces REQUIRED)
+# find_package(vision_interfaces REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 find_package(
@@ -66,7 +66,7 @@ add_executable(ebimu
     src/e2box_imu_node/e2box_imu_node.cpp
     src/serial_manager/serial_manager.cpp
   )
-ament_target_dependencies(ebimu rclcpp Boost humanoid_interfaces std_msgs sensor_msgs vision_interfaces)
+ament_target_dependencies(ebimu rclcpp Boost humanoid_interfaces std_msgs sensor_msgs ) # vision_interfaces
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Network ${OpenCV_LIBRARIES})
 install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
 
@@ -75,7 +75,7 @@ add_executable(e2box_imu_node
     src/e2box_imu_node/e2box_imu_node.cpp
     src/serial_manager/serial_manager.cpp
 )
-ament_target_dependencies(e2box_imu_node rclcpp Boost humanoid_interfaces std_msgs sensor_msgs vision_interfaces)
+ament_target_dependencies(e2box_imu_node rclcpp Boost humanoid_interfaces std_msgs sensor_msgs ) # vision_interfaces
 target_compile_definitions(e2box_imu_node PRIVATE BUILD_STANDALONE)
 install(TARGETS e2box_imu_node DESTINATION lib/${PROJECT_NAME})
 
