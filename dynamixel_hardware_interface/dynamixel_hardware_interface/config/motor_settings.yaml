@@ -1,0 +1,22 @@
+dynamixel_hardware_interface:
+  ros__parameters:
+    device_name: "/dev/ttyUSB-U2D2"
+    baud_rate: 1000000
+    protocol_version: 2.0
+
+    control_topic: "/dynamixel_control"
+    status_topic: "/motor_status"
+
+    control_rate_hz: 100.0
+    control_timeout_sec: 0.5
+
+    upper_body_startup_mode: 3
+    lower_body_startup_mode: 3
+    waist_startup_mode: 3
+
+    
+    # upper_body_ids: [0, 1, 2, 3, 4, 5, 6]
+    lower_body_ids: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+    waist_ids: [22]
+
+

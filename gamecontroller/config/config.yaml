@@ -1,0 +1,9 @@
+/**:
+  ros__parameters:
+   pub_topic: "gamecontroldata"
+   TEAM_ROBIT_NUMBER: 21
+   TEAM_ROBIT_RED : 22
+   TEAM_ROBIT_BLUE : 23
+
+   GAMECONTROLLER_DATA_PORT    : 3838 
+   GAMECONTROLLER_RETURN_PORT      : 3939

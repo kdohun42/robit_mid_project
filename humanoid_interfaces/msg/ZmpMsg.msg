@@ -1,0 +1,9 @@
+float64 left_x_zmp
+float64 left_y_zmp
+float64 right_x_zmp
+float64 right_y_zmp
+float64 total_x_zmp
+float64 total_y_zmp
+bool left_foot
+bool right_foot
+bool both_feet

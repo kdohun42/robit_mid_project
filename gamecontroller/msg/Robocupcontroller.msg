@@ -1,0 +1,9 @@
+int64 robotnum
+int64 state
+int64 readytime
+int64 penalty
+int64 firsthalf
+int64 firstside
+int64 kickoffteam
+int64 secondstate
+int64[] secondinfo

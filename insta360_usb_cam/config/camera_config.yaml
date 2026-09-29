@@ -1,0 +1,30 @@
+/**:
+  ros__parameters:
+    viewer: true
+    camera_name: "camera1"
+    topic: "/camera/image_raw"
+    compressed_topic: "/camera/compressed_image"
+    device: "/dev/video-insta360"
+    frame_id: "camera"
+    resolution: "1280x960"
+    debug_mode: false 
+    fps: 30.0
+    brightness: -1
+    contrast: -1
+    saturation: -1
+    hue: -1
+    gamma: -1
+    sharpness: -1
+    whitebalance: -1
+    auto_whitebalance: true
+    exposure: -1
+    auto_exposure: true
+    focus: -1
+    auto_focus: false
+    zoom: -1
+    pan: -1
+    tilt: -1  
+    rotate: -1
+    horizontal_flip: false
+    vertical_flip: false
+    output_resolution: "640x480"

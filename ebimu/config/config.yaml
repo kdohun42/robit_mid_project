@@ -1,0 +1,24 @@
+e2box_imu_node:
+  ros__parameters:
+
+    settings:
+      port_name: "/dev/ttyUSB-EBIMU"
+      baud_rate: 115200
+      loop_rate: 100
+      angular_velocity_threshold: 0.3
+      linear_acceleration_threshold: 2.0
+      complementary_filter: false
+      complementary_filter_alpha: 0.98 # 값이 클수록 gyro 의존도 높음 반응성 증가
+      low_pass_filter: true
+      low_pass_filter_alpha: 0.03 # 값이 작을수록 필터링 강함
+
+    topics:
+      imu_bridge_pub_topic: "bridge"
+      yaw_set_sub_topic: "/pan_angle_compensation"
+
+qnode:
+  ros__parameters:
+
+    topics:
+      imu_bridge_sub_topic: "bridge"
+      imu_pub_topic: "Imu"

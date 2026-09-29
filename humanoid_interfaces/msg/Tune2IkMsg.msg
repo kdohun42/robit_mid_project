@@ -1,0 +1,171 @@
+bool ik_flag
+
+float64 entire_time
+float64 frequency
+
+float64 default_x_left
+float64 default_y_left
+float64 default_z_left
+float64 default_x_right
+float64 default_y_right
+float64 default_z_right
+
+float64[] offset_motor
+
+float64 swing_shoulder_left
+float64 swing_shoulder_right
+float64 swing_leg_left
+float64 swing_leg_right
+float64 rise_leg_left
+float64 rise_leg_right
+
+float64 start_entire_time
+float64 start_swing
+float64 start_rise
+float64 end_entire_time
+float64 end_swing
+float64 end_rise
+
+float64 test_x
+float64 test_side
+float64 test_yaw
+float64 tuning_x
+float64 tuning_side
+float64 tuning_yaw
+
+float64 balance_value_0
+float64 balance_value_1
+float64 balance_value_2
+float64 balance_value_3
+float64 balance_pitch_gp
+float64 balance_pitch_gi
+float64 balance_pitch_gd
+float64 balance_pitch_elimit
+float64 balance_pitch_olimit
+float64 balance_pitch_neg_target
+float64 balance_pitch_pos_target
+float64 balance_roll_gp
+float64 balance_roll_gi
+float64 balance_roll_gd
+float64 balance_roll_elimit
+float64 balance_roll_olimit
+float64 balance_roll_neg_target
+float64 balance_roll_pos_target
+float64 balance_angle_pitch_gp
+float64 balance_angle_pitch_gi
+float64 balance_angle_pitch_gd
+float64 balance_angle_pitch_elimit
+float64 balance_angle_pitch_olimit
+float64 balance_angle_pitch_neg_target
+float64 balance_angle_pitch_pos_target
+
+float64 balance_value_4
+float64 balance_value_5
+int64 balance_pitch_flag_imu  # bool
+float64 balance_pitch_gp_imu
+float64 balance_pitch_gi_imu
+float64 balance_pitch_gd_imu
+float64 balance_pitch_neg_target_imu
+float64 balance_pitch_pos_target_imu
+float64 balance_pitch_elimit_imu
+float64 balance_pitch_olimit_imu
+
+int64 balance_roll_flag_imu  # bool
+float64 balance_roll_gp_imu
+float64 balance_roll_gi_imu
+float64 balance_roll_gd_imu
+float64 balance_roll_neg_target_imu
+float64 balance_roll_pos_target_imu
+float64 balance_roll_elimit_imu
+float64 balance_roll_olimit_imu
+
+int64 balance_pitch_flag  # bool
+int64 balance_ankle_pitch_flag  # bool
+int64 balance_roll_flag  # bool
+int64 ratio_check_flag
+
+float64 center2leg
+float64 link2link
+float64 init_z_up
+
+float64[] percentage_of_ik_motor
+
+float64 first_pos_xr
+float64 first_neg_xr
+float64 first_pos_side_r
+float64 first_neg_side_r
+float64 first_pos_yaw_r
+float64 first_neg_yaw_r
+float64 first_pos_xl
+float64 first_neg_xl
+float64 first_pos_side_l
+float64 first_neg_side_l
+float64 first_pos_yaw_l
+float64 first_neg_yaw_l
+float64 first_pos_side_r_swing_minus
+float64 first_neg_side_r_swing_minus
+float64 first_pos_side_l_swing_minus
+float64 first_neg_side_l_swing_minus
+int64 first_min
+int64 first_max
+
+float64 second_pos_xr
+float64 second_neg_xr
+float64 second_pos_side_r
+float64 second_neg_side_r
+float64 second_pos_yaw_r
+float64 second_neg_yaw_r
+float64 second_pos_xl
+float64 second_neg_xl
+float64 second_pos_side_l
+float64 second_neg_side_l
+float64 second_pos_yaw_l
+float64 second_neg_yaw_l
+float64 second_pos_side_r_swing_minus
+float64 second_neg_side_r_swing_minus
+float64 second_pos_side_l_swing_minus
+float64 second_neg_side_l_swing_minus
+int64 second_min
+int64 second_max
+
+float64 third_pos_xr
+float64 third_neg_xr
+float64 third_pos_side_r
+float64 third_neg_side_r
+float64 third_pos_yaw_r
+float64 third_neg_yaw_r
+float64 third_pos_xl
+float64 third_neg_xl
+float64 third_pos_side_l
+float64 third_neg_side_l
+float64 third_pos_yaw_l
+float64 third_neg_yaw_l
+float64 third_pos_side_r_swing_minus
+float64 third_neg_side_r_swing_minus
+float64 third_pos_side_l_swing_minus
+float64 third_neg_side_l_swing_minus
+int64 third_min
+int64 third_max
+
+float64 fourth_pos_xr
+float64 fourth_neg_xr
+float64 fourth_pos_side_r
+float64 fourth_neg_side_r
+float64 fourth_pos_yaw_r
+float64 fourth_neg_yaw_r
+float64 fourth_pos_xl
+float64 fourth_neg_xl
+float64 fourth_pos_side_l
+float64 fourth_neg_side_l
+float64 fourth_pos_yaw_l
+float64 fourth_neg_yaw_l
+float64 fourth_pos_side_r_swing_minus
+float64 fourth_neg_side_r_swing_minus
+float64 fourth_pos_side_l_swing_minus
+float64 fourth_neg_side_l_swing_minus
+int64 fourth_min
+int64 fourth_max
+
+int64 landing_time_control_flag
+
+int64 control_system_flag
