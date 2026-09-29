@@ -1,6 +1,6 @@
 dynamixel_hardware_interface:
   ros__parameters:
-    device_name: "/dev/ttyUSB-U2D2"
+    device_name: "/dev/ttyUSB0"
     baud_rate: 1000000
     protocol_version: 2.0
 
@@ -14,9 +14,6 @@ dynamixel_hardware_interface:
     lower_body_startup_mode: 3
     waist_startup_mode: 3
 
-    
     # upper_body_ids: [0, 1, 2, 3, 4, 5, 6]
     lower_body_ids: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     waist_ids: [22]
-
-
