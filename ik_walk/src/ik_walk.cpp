@@ -47,7 +47,7 @@ void IKwalk::get_parameters()
 {
 
   std::string addr;
-  addr = "work 파일 경로 "; // ******************************************
+  addr = "/home/kdh/Desktop/colcon_ws/src/robit_mid_project/tune_walk-master/work/RCKO"; // ******************************************
 
   std::ifstream is(addr.c_str());
 
@@ -355,8 +355,8 @@ int main(int argc, char **argv)
 
 void IKwalk::Walk_Start_End(Walk_Param &Now_Param, Walk_Param &Past_Param)
 {
-  irc_humanoid_interfaces::msg::IkEndMsg IkEnd;
-  irc_humanoid_interfaces::msg::IkLTCMsg IkLTC;
+  humanoid_interfaces::msg::IkEndMsg IkEnd;
+  humanoid_interfaces::msg::IkLTCMsg IkLTC;
 
   if (Past_Param.IK_Flag != Ik_Flag_Past)
   {
@@ -527,8 +527,8 @@ void IKwalk::Generate_Pattern(Walk_Param &Now_Param)
 
 void IKwalk::Result_Pattern(Walk_Param &Now_Param)
 {
-  irc_humanoid_interfaces::msg::IkCoordMsg IkCoord;
-  irc_humanoid_interfaces::msg::IkPatternMsg IkPattern;
+  humanoid_interfaces::msg::IkCoordMsg IkCoord;
+  humanoid_interfaces::msg::IkPatternMsg IkPattern;
 
   Time_Right_Leg_Start = Timer_Time_Start / Now_Param.Sink_Entire_Time + 0.5;
 
@@ -1542,7 +1542,7 @@ if(target > 0){
   Ik_Flag_Past = Now_Param.IK_Flag;
 }
 
-void IKwalk::master2ik_callback(const irc_humanoid_interfaces::msg::Master2IkMsg::SharedPtr msg)
+void IKwalk::master2ik_callback(const humanoid_interfaces::msg::Master2IkMsg::SharedPtr msg)
 {
   Past_Param.IK_Flag = msg->flag;
   //-----------X_Accel-----------//
@@ -1668,7 +1668,7 @@ void IKwalk::master2ik_callback(const irc_humanoid_interfaces::msg::Master2IkMsg
     Past_Param.Yaw_L.Yaw = -YAW_LIMIT;
 }
 
-void IKwalk::imu_callback(const irc_humanoid_interfaces::msg::ImuMsg::SharedPtr msg)
+void IKwalk::imu_callback(const humanoid_interfaces::msg::ImuMsg::SharedPtr msg)
 {
   IMU.pitch = msg->pitch;//Cal.MAF(msg->pitch);
   IMU.roll = msg->roll;
@@ -1680,7 +1680,7 @@ void IKwalk::imu_callback(const irc_humanoid_interfaces::msg::ImuMsg::SharedPtr 
   }
 }
 
-void IKwalk::tune2ik_callback(const irc_humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg)
+void IKwalk::tune2ik_callback(const humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg)
 {
   Past_Param.IK_Flag = msg->ik_flag;
   //Past_Param.Entire_Time = msg->entire_time;

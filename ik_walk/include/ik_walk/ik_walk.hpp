@@ -22,17 +22,18 @@
 #include "zmp_position_control.hpp"
 
 // MSG_HEADER //
-#include "irc_humanoid_interfaces/msg/ik_com_msg.hpp"
-#include "irc_humanoid_interfaces/msg/ik_coord_msg.hpp"
-#include "irc_humanoid_interfaces/msg/ik_end_msg.hpp"
-#include "irc_humanoid_interfaces/msg/ik_ltc_msg.hpp"
-#include "irc_humanoid_interfaces/msg/ik_pattern_msg.hpp"
-#include "irc_humanoid_interfaces/msg/motion_operator.hpp"
+#include "humanoid_interfaces/msg/ik_com_msg.hpp"
+#include "humanoid_interfaces/msg/ik_coord_msg.hpp"
+#include "humanoid_interfaces/msg/ik_end_msg.hpp"
+#include "humanoid_interfaces/msg/ik_ltc_msg.hpp"
+#include "humanoid_interfaces/msg/ik_pattern_msg.hpp"
+// MotionOperator integration disabled for walking-only tests.
+// #include "humanoid_interfaces/msg/motion_operator.hpp"
 
-#include "irc_humanoid_interfaces/msg/imu_msg.hpp"
-#include "irc_humanoid_interfaces/msg/master2_ik_msg.hpp"
-#include "irc_humanoid_interfaces/msg/tune2_ik_msg.hpp"
-#include "irc_humanoid_interfaces/msg/zmp_msg.hpp"
+#include "humanoid_interfaces/msg/imu_msg.hpp"
+#include "humanoid_interfaces/msg/master2_ik_msg.hpp"
+#include "humanoid_interfaces/msg/tune2_ik_msg.hpp"
+#include "humanoid_interfaces/msg/zmp_msg.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/bool.hpp"
 #define X_LIMIT 50
@@ -71,25 +72,25 @@ public:
     int8_t qos_depth = this->get_parameter("qos_depth").get_value<int8_t>();
     const auto QOS_RKL10V = rclcpp::QoS(rclcpp::KeepLast(qos_depth)).reliable().durability_volatile();
     Motor_Pub = this->create_publisher<dynamixel_hardware_msgs::msg::DynamixelControlMsgs>("dynamixel_control", rclcpp::QoS(rclcpp::KeepLast(10)).reliable().best_effort());
-    Ikend_Pub = this->create_publisher<irc_humanoid_interfaces::msg::IkEndMsg>("ikend", 10);                   // QOS_RKL10V);
-    Ikcoordinate_Pub = this->create_publisher<irc_humanoid_interfaces::msg::IkCoordMsg>("ikcoordinate", 10);   // QOS_RKL10V);
-    walk_pattern_Pub = this->create_publisher<irc_humanoid_interfaces::msg::IkPatternMsg>("walk_pattern", 10); // QOS_RKL10V);
-    COM_Pub = this->create_publisher<irc_humanoid_interfaces::msg::IkComMsg>("COM", 10);                       // QOS_RKL10V);
-    Landing_Pub = this->create_publisher<irc_humanoid_interfaces::msg::IkLTCMsg>("Landing_Time_Control", 10);  // QOS_RKL10V);
+    Ikend_Pub = this->create_publisher<humanoid_interfaces::msg::IkEndMsg>("ikend", 10);                   // QOS_RKL10V);
+    Ikcoordinate_Pub = this->create_publisher<humanoid_interfaces::msg::IkCoordMsg>("ikcoordinate", 10);   // QOS_RKL10V);
+    walk_pattern_Pub = this->create_publisher<humanoid_interfaces::msg::IkPatternMsg>("walk_pattern", 10); // QOS_RKL10V);
+    COM_Pub = this->create_publisher<humanoid_interfaces::msg::IkComMsg>("COM", 10);                       // QOS_RKL10V);
+    Landing_Pub = this->create_publisher<humanoid_interfaces::msg::IkLTCMsg>("Landing_Time_Control", 10);  // QOS_RKL10V);
 
-    Imu_Sub = this->create_subscription<irc_humanoid_interfaces::msg::ImuMsg>(
+    Imu_Sub = this->create_subscription<humanoid_interfaces::msg::ImuMsg>(
         "Imu",
         rclcpp::QoS(rclcpp::KeepLast(10)).reliable().best_effort(),
         std::bind(&IKwalk::imu_callback, this, std::placeholders::_1));
-    Master2ik_Sub = this->create_subscription<irc_humanoid_interfaces::msg::Master2IkMsg>(
+    Master2ik_Sub = this->create_subscription<humanoid_interfaces::msg::Master2IkMsg>(
         "master2ik",
         qos_profile,
         std::bind(&IKwalk::master2ik_callback, this, std::placeholders::_1));
-    Tune2ik_Sub = this->create_subscription<irc_humanoid_interfaces::msg::Tune2IkMsg>(
+    Tune2ik_Sub = this->create_subscription<humanoid_interfaces::msg::Tune2IkMsg>(
         "tune2walk",
         qos_profile,
         std::bind(&IKwalk::tune2ik_callback, this, std::placeholders::_1));
-    // Zmp_Sub = this->create_subscription<irc_humanoid_interfaces::msg::ZmpMsg>(
+    // Zmp_Sub = this->create_subscription<humanoid_interfaces::msg::ZmpMsg>(
     //     "zmp",
     //     qos_profile,
     //     std::bind(&IKwalk::zmp_callback, this, std::placeholders::_1));
@@ -100,45 +101,46 @@ public:
         std::bind(&IKwalk::kick_flag_callback, this, std::placeholders::_1));
     kick_flag_pub_ = this->create_publisher<std_msgs::msg::Bool>("kick_flag_end", 10);
 
-    const auto motion_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
-    motion_start_sub_ = create_subscription<irc_humanoid_interfaces::msg::MotionOperator>(
-        "motion_operator", motion_qos,
-        [this](const irc_humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
-          active_motion_num_ = msg->motion_num;
-          IK.set_motor_publish_enabled(false);
-          RCLCPP_INFO(get_logger(),
-                      "Paused IK motor commands for motion %d", msg->motion_num);
-        });
-    motion_end_sub_ = create_subscription<irc_humanoid_interfaces::msg::MotionOperator>(
-        "motion_end", motion_qos,
-        [this](const irc_humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
-          if (msg->motion_end == 0 || msg->motion_num != active_motion_num_)
-            return;
-          IK.set_motor_publish_enabled(true);
-          RCLCPP_INFO(get_logger(),
-                      "Resumed IK motor commands after motion %d", msg->motion_num);
-          active_motion_num_ = -1;
-        });
+    // MotionOperator integration disabled for walking-only tests.
+    // const auto motion_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
+    // motion_start_sub_ = create_subscription<humanoid_interfaces::msg::MotionOperator>(
+    //     "motion_operator", motion_qos,
+    //     [this](const humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
+    //       active_motion_num_ = msg->motion_num;
+    //       IK.set_motor_publish_enabled(false);
+    //       RCLCPP_INFO(get_logger(),
+    //                   "Paused IK motor commands for motion %d", msg->motion_num);
+    //     });
+    // motion_end_sub_ = create_subscription<humanoid_interfaces::msg::MotionOperator>(
+    //     "motion_end", motion_qos,
+    //     [this](const humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
+    //       if (msg->motion_end == 0 || msg->motion_num != active_motion_num_)
+    //         return;
+    //       IK.set_motor_publish_enabled(true);
+    //       RCLCPP_INFO(get_logger(),
+    //                   "Resumed IK motor commands after motion %d", msg->motion_num);
+    //       active_motion_num_ = -1;
+    //     });
   }
 
   // MSG //
-  irc_humanoid_interfaces::msg::IkEndMsg IkEnd;
-  irc_humanoid_interfaces::msg::IkCoordMsg IkCoord;
-  irc_humanoid_interfaces::msg::IkPatternMsg IkPattern;
-  irc_humanoid_interfaces::msg::IkComMsg IkCOM;
-  irc_humanoid_interfaces::msg::IkLTCMsg IkLTC;
+  humanoid_interfaces::msg::IkEndMsg IkEnd;
+  humanoid_interfaces::msg::IkCoordMsg IkCoord;
+  humanoid_interfaces::msg::IkPatternMsg IkPattern;
+  humanoid_interfaces::msg::IkComMsg IkCOM;
+  humanoid_interfaces::msg::IkLTCMsg IkLTC;
 
-  irc_humanoid_interfaces::msg::ImuMsg IMU;
-  irc_humanoid_interfaces::msg::Master2IkMsg Master2ik;
-  irc_humanoid_interfaces::msg::Tune2IkMsg Tune2ik;
-  irc_humanoid_interfaces::msg::ZmpMsg ZMP;
+  humanoid_interfaces::msg::ImuMsg IMU;
+  humanoid_interfaces::msg::Master2IkMsg Master2ik;
+  humanoid_interfaces::msg::Tune2IkMsg Tune2ik;
+  humanoid_interfaces::msg::ZmpMsg ZMP;
 
   // callback function //
   void get_parameters();
-  void master2ik_callback(const irc_humanoid_interfaces::msg::Master2IkMsg::SharedPtr msg);
-  void imu_callback(const irc_humanoid_interfaces::msg::ImuMsg::SharedPtr msg);
-  void tune2ik_callback(const irc_humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg);
-  void zmp_callback(const irc_humanoid_interfaces::msg::ZmpMsg::SharedPtr msg)
+  void master2ik_callback(const humanoid_interfaces::msg::Master2IkMsg::SharedPtr msg);
+  void imu_callback(const humanoid_interfaces::msg::ImuMsg::SharedPtr msg);
+  void tune2ik_callback(const humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg);
+  void zmp_callback(const humanoid_interfaces::msg::ZmpMsg::SharedPtr msg)
   {
   }
   void kick_flag_callback(const std_msgs::msg::String::SharedPtr msg);
@@ -476,24 +478,25 @@ private:
   size_t count_;
   std::mutex pub_mutex;
   // Publisher //
-  rclcpp::Publisher<irc_humanoid_interfaces::msg::IkEndMsg>::SharedPtr Ikend_Pub;
-  rclcpp::Publisher<irc_humanoid_interfaces::msg::IkCoordMsg>::SharedPtr Ikcoordinate_Pub;
-  rclcpp::Publisher<irc_humanoid_interfaces::msg::IkPatternMsg>::SharedPtr walk_pattern_Pub;
-  rclcpp::Publisher<irc_humanoid_interfaces::msg::IkComMsg>::SharedPtr COM_Pub;
-  rclcpp::Publisher<irc_humanoid_interfaces::msg::IkLTCMsg>::SharedPtr Landing_Pub;
+  rclcpp::Publisher<humanoid_interfaces::msg::IkEndMsg>::SharedPtr Ikend_Pub;
+  rclcpp::Publisher<humanoid_interfaces::msg::IkCoordMsg>::SharedPtr Ikcoordinate_Pub;
+  rclcpp::Publisher<humanoid_interfaces::msg::IkPatternMsg>::SharedPtr walk_pattern_Pub;
+  rclcpp::Publisher<humanoid_interfaces::msg::IkComMsg>::SharedPtr COM_Pub;
+  rclcpp::Publisher<humanoid_interfaces::msg::IkLTCMsg>::SharedPtr Landing_Pub;
   rclcpp::Publisher<dynamixel_hardware_msgs::msg::DynamixelControlMsgs>::SharedPtr Motor_Pub;
   rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr kick_flag_pub_;
   
-  std::shared_ptr<rclcpp::Subscription<irc_humanoid_interfaces::msg::ImuMsg>> Imu_Sub;
-  std::shared_ptr<rclcpp::Subscription<irc_humanoid_interfaces::msg::Master2IkMsg>> Master2ik_Sub;
-  std::shared_ptr<rclcpp::Subscription<irc_humanoid_interfaces::msg::Tune2IkMsg>> Tune2ik_Sub;
-  std::shared_ptr<rclcpp::Subscription<irc_humanoid_interfaces::msg::ZmpMsg>> Zmp_Sub;
+  std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::ImuMsg>> Imu_Sub;
+  std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::Master2IkMsg>> Master2ik_Sub;
+  std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::Tune2IkMsg>> Tune2ik_Sub;
+  std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::ZmpMsg>> Zmp_Sub;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr kick_flag_sub_;
-  rclcpp::Subscription<irc_humanoid_interfaces::msg::MotionOperator>::SharedPtr
-      motion_start_sub_;
-  rclcpp::Subscription<irc_humanoid_interfaces::msg::MotionOperator>::SharedPtr
-      motion_end_sub_;
-  int32_t active_motion_num_ = -1;
+  // MotionOperator integration disabled for walking-only tests.
+  // rclcpp::Subscription<humanoid_interfaces::msg::MotionOperator>::SharedPtr
+  //     motion_start_sub_;
+  // rclcpp::Subscription<humanoid_interfaces::msg::MotionOperator>::SharedPtr
+  //     motion_end_sub_;
+  // int32_t active_motion_num_ = -1;
 
   string kick_flag_msg_ = "";
   string kick_flag_msg_pending = "";

@@ -10,7 +10,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(irc_humanoid_interfaces REQUIRED)
+find_package(humanoid_interfaces REQUIRED)
 find_package(dynamixel_hardware_msgs REQUIRED)
 
 # for Lifecycle
@@ -23,7 +23,7 @@ find_package(rcutils REQUIRED)
 include_directories(
   include/ik_walk
   include/
-  ${irc_humanoid_interfaces_INCLUDE_DIRS}
+  ${humanoid_interfaces_INCLUDE_DIRS}
 )
 
 set(headers
@@ -51,7 +51,7 @@ ament_target_dependencies(ik_walk
   rclcpp
   rclcpp_lifecycle
   std_msgs
-  irc_humanoid_interfaces
+  humanoid_interfaces
   dynamixel_hardware_msgs
 )
 

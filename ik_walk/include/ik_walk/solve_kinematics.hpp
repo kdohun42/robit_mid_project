@@ -16,8 +16,8 @@
 #include <mutex>
 
 #include "rclcpp/rclcpp.hpp"
-#include "irc_humanoid_interfaces/msg/ik_angle_sim_msg.hpp"
-#include "irc_humanoid_interfaces/msg/tune2_ik_msg.hpp"
+#include "humanoid_interfaces/msg/ik_angle_sim_msg.hpp"
+#include "humanoid_interfaces/msg/tune2_ik_msg.hpp"
 
 #include "dynamixel_hardware_msgs/msg/dynamixel_control_msgs.hpp"
 #include "dynamixel_hardware_msgs/msg/dynamixel_msgs.hpp"
@@ -52,11 +52,11 @@ int vel;
         // const auto QOS_RKL10V = rclcpp::QoS(rclcpp::KeepLast(qos_depth)).reliable().durability_volatile();
         
         Motor_Pub = this->create_publisher<dynamixel_hardware_msgs::msg::DynamixelControlMsgs>("dynamixel_control", 10);
-        Motor_Position_Pub = this->create_publisher<irc_humanoid_interfaces::msg::IkAngleSimMsg>("sim_position", 10);
+        Motor_Position_Pub = this->create_publisher<humanoid_interfaces::msg::IkAngleSimMsg>("sim_position", 10);
 
     }
 
-    void tune2ik_callback(const irc_humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg);
+    void tune2ik_callback(const humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg);
   
     void solve(double pX_r, double pY_r, double pZ_r, double Yaw_R_deg, double pX_l, double pY_l, double pZ_l,
                double Yaw_L_deg, int body, double Shoulder_Pattern_X_R, double Shoulder_Pattern_X_L,
@@ -169,11 +169,11 @@ int vel;
     bool kick_reached = false;
 private:
     std::atomic_bool motor_publish_enabled_{true};
-    std::shared_ptr<rclcpp::Subscription<irc_humanoid_interfaces::msg::Tune2IkMsg>> Tune2ik_Sub;
+    std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::Tune2IkMsg>> Tune2ik_Sub;
 
     std::mutex pub_mutex;
     rclcpp::Publisher<dynamixel_hardware_msgs::msg::DynamixelControlMsgs>::SharedPtr Motor_Pub;
-    rclcpp::Publisher<irc_humanoid_interfaces::msg::IkAngleSimMsg>::SharedPtr Motor_Position_Pub;
+    rclcpp::Publisher<humanoid_interfaces::msg::IkAngleSimMsg>::SharedPtr Motor_Position_Pub;
 
     unsigned int g_DXL_ID_position[30] = {
         0,

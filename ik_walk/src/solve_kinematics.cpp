@@ -163,7 +163,7 @@ void IK_Solve::solve(double pX_r, double pY_r, double pZ_r, double Yaw_R_deg, do
   //     (void)Imu_pos;
   //     (void)Imu_neg;
   // 현재는 사용되지 않지만, 추후 제거 요망.
-  // irc_humanoid_interfaces::msg::IkAngleSimMsg Position_Info;
+  // humanoid_interfaces::msg::IkAngleSimMsg Position_Info;
   /////////////////////////////////  Solve Start  //////////////////////////////////
 
   const double C2p = 45, L_1 = 140, L_2 = 140; // C2p(Center to pelvis) = 중심에서 roll 축까지의 길이, L_1,2 = 링크 위 아래 길이
@@ -549,31 +549,47 @@ void IK_Solve::motor_packet(int body, int limit)
     RCLCPP_ERROR(this->get_logger(), "Motor_Pub is not initialized.");
     return;
   }
-  //body=Leg;
+  // 기존 전체 모터 명령 생성 코드 (복원용으로 보관)
+  // //body=Leg;
+  //
+  // if (body == Leg)
+  // {
+  //   // 0~5번 모터만 사용 (6,7,8,9번 제외)
+  //   for(int i=0; i< 10; i++) // 6개
+  //   {
+  //     double radpos = ((static_cast<double>(g_DXL_ID_position[i])) / 4096) * (2 * M_PI) - M_PI;
+  //
+  //     Motor_Info.goal_position = float(radpos);
+  //     Motor_Info.profile_velocity = vel;
+  //     DXL.motor_control.push_back(Motor_Info);
+  //   }
+  //
+  // }
+  // // 10~21번 모터 (12개)
+  // for(int i = body ; i < 25; i++) // 하체 12개
+  // {
+  //   double radpos = ((static_cast<double>(g_DXL_ID_position[i])) / 4096) * (2 * M_PI) - M_PI;
+  //
+  //   Motor_Info.goal_position = float(radpos);
+  //   Motor_Info.profile_velocity = vel;
+  //   DXL.motor_control.push_back(Motor_Info);
+  // }
+  // // 22번 모터 제외 (사용하지 않음)
 
-  if (body == Leg)
+  // 드라이버 설정 순서: 하체 10~21번 + 허리 22번, 총 13개.
+  // 하체 테스트에서는 body와 limit에 관계없이 이 모터들만 제어한다.
+  (void)body;
+  (void)limit;
+  for (int id = 10; id <= 22; ++id)
   {
-    // 0~5번 모터만 사용 (6,7,8,9번 제외)
-    for(int i=0; i< 10; i++) // 6개
-    {
-      double radpos = ((static_cast<double>(g_DXL_ID_position[i])) / 4096) * (2 * M_PI) - M_PI;
+    double radpos =
+        (static_cast<double>(g_DXL_ID_position[id]) / 4096.0)
+        * (2.0 * M_PI) - M_PI;
 
-      Motor_Info.goal_position = float(radpos);
-      Motor_Info.profile_velocity = vel;
-      DXL.motor_control.push_back(Motor_Info);
-    }
-
-  }
-  // 10~21번 모터 (12개)
-  for(int i = body ; i < 25; i++) // 하체 12개
-  {
-    double radpos = ((static_cast<double>(g_DXL_ID_position[i])) / 4096) * (2 * M_PI) - M_PI;
-
-    Motor_Info.goal_position = float(radpos);
+    Motor_Info.goal_position = static_cast<float>(radpos);
     Motor_Info.profile_velocity = vel;
     DXL.motor_control.push_back(Motor_Info);
   }
-  // 22번 모터 제외 (사용하지 않음)
 
   Motor_Pub->publish(DXL);
   auto t2r = [](unsigned int t) {
