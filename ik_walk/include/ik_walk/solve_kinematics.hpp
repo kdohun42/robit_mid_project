@@ -1,33 +1,31 @@
 #ifndef SOLVE_KINEMATICS_HPP
 #define SOLVE_KINEMATICS_HPP
 
-#include <memory>
-#include <iostream>
-#include <cmath>
-#include <memory>
-#include <fstream>
 #include <algorithm>
 #include <atomic>
 #include <chrono>
-#include <thread>
-#include <string>
-#include <utility>
+#include <cmath>
+#include <fstream>
 #include <functional>
+#include <iostream>
+#include <memory>
 #include <mutex>
+#include <string>
+#include <thread>
+#include <utility>
 
+#include "humanoid_interfaces/msg/IkAngleSimMsg.hpp"
+#include "humanoid_interfaces/msg/Tune2IkMsg.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "irc_humanoid_interfaces/msg/ik_angle_sim_msg.hpp"
-#include "irc_humanoid_interfaces/msg/tune2_ik_msg.hpp"
 
+#include "dynamixel_hardware_msgs/msg/current_motor_status.hpp"
 #include "dynamixel_hardware_msgs/msg/dynamixel_control_msgs.hpp"
 #include "dynamixel_hardware_msgs/msg/dynamixel_msgs.hpp"
-#include "dynamixel_hardware_msgs/msg/current_motor_status.hpp"
 
-
-#include "walk_pattern.hpp"
 #include "imu_position_control.hpp"
-#include "zmp_position_control.hpp"
 #include "pid_control_float.hpp"
+#include "walk_pattern.hpp"
+#include "zmp_position_control.hpp"
 
 #define PI 3.141592653589793
 #define deg2rad PI / (double)180
@@ -37,37 +35,33 @@
 
 using namespace std;
 
-
 class IK_Solve : public rclcpp::Node
 {
-public:
-int vel;
+  public:
+    int vel;
     IK_Solve() : Node("ik_solve")
     {
-        
+
         std::lock_guard<std::mutex> lock(pub_mutex);
         RCLCPP_INFO(this->get_logger(), "Current SOLVE instance: %p", this);
         // rclcpp::QoS qos_profile(10);
         // int8_t qos_depth = this->get_parameter("qos_depth").get_value<int8_t>();
         // const auto QOS_RKL10V = rclcpp::QoS(rclcpp::KeepLast(qos_depth)).reliable().durability_volatile();
-        
-        Motor_Pub = this->create_publisher<dynamixel_hardware_msgs::msg::DynamixelControlMsgs>("dynamixel_control", 10);
-        Motor_Position_Pub = this->create_publisher<irc_humanoid_interfaces::msg::IkAngleSimMsg>("sim_position", 10);
 
+        Motor_Pub = this->create_publisher<dynamixel_hardware_msgs::msg::DynamixelControlMsgs>("dynamixel_control", 10);
+        Motor_Position_Pub = this->create_publisher<humanoid_interfaces::msg::IkAngleSimMsg>("sim_position", 10);
     }
 
-    void tune2ik_callback(const irc_humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg);
-  
+    void tune2ik_callback(const humanoid_interfaces::msg::Tune2IkMsg::SharedPtr msg);
+
     void solve(double pX_r, double pY_r, double pZ_r, double Yaw_R_deg, double pX_l, double pY_l, double pZ_l,
                double Yaw_L_deg, int body, double Shoulder_Pattern_X_R, double Shoulder_Pattern_X_L,
                double Shoulder_Pattern_Y_R, double Shoulder_Pattern_Y_L, double Balance_Theta1, double Balance_Theta2,
                double Balance_Theta3, double R_Rise_Condition, double L_Rise_Condition, double R_Rise_Max,
                double L_Rise_Max, double Imu_pitch, double Imu_pos, double Imu_neg, double Imu_roll, double Now_X,
                double Waist_Yaw_deg = 0.0);
-    void solve_kick(double pX_r, double pY_r, double pZ_r, double Yaw_R_deg,
-                    double pX_l, double pY_l, double pZ_l, double Yaw_L_deg,
-                    int body,
-                    double Imu_pitch, double Imu_pos, double Imu_neg, double Imu_roll,
+    void solve_kick(double pX_r, double pY_r, double pZ_r, double Yaw_R_deg, double pX_l, double pY_l, double pZ_l,
+                    double Yaw_L_deg, int body, double Imu_pitch, double Imu_pos, double Imu_neg, double Imu_roll,
                     double Now_X, double roll_deg, bool left_kick, bool waist_turn = false);
     double ang2pos(double angle);
     void init_save();
@@ -76,7 +70,7 @@ int vel;
     {
         motor_publish_enabled_.store(enabled, std::memory_order_release);
     }
-  
+
     void Balance_Control_Body_Upright(double Input_Data, double Robot_Z, double Time, double Rise_Condition,
                                       double Input_Data2, double Balance_Value_Msg, double Balance_Value_Msg2,
                                       double Zmp_Pitch_Limit_Left, double Zmp_Pitch_Limit_Right, double Input_Data3,
@@ -167,13 +161,14 @@ int vel;
         double L_Vertical_Angle = 0.0;
     } Compensate_Angle_Data;
     bool kick_reached = false;
-private:
+
+  private:
     std::atomic_bool motor_publish_enabled_{true};
-    std::shared_ptr<rclcpp::Subscription<irc_humanoid_interfaces::msg::Tune2IkMsg>> Tune2ik_Sub;
+    std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::Tune2IkMsg>> Tune2ik_Sub;
 
     std::mutex pub_mutex;
     rclcpp::Publisher<dynamixel_hardware_msgs::msg::DynamixelControlMsgs>::SharedPtr Motor_Pub;
-    rclcpp::Publisher<irc_humanoid_interfaces::msg::IkAngleSimMsg>::SharedPtr Motor_Position_Pub;
+    rclcpp::Publisher<humanoid_interfaces::msg::IkAngleSimMsg>::SharedPtr Motor_Position_Pub;
 
     unsigned int g_DXL_ID_position[30] = {
         0,
@@ -188,7 +183,6 @@ private:
         0,
     };
     bool ikinit_flag = true;
-    
 };
 
 #endif
