@@ -97,20 +97,20 @@ class IKwalk : public rclcpp::Node
         kick_flag_pub_ = this->create_publisher<std_msgs::msg::Bool>("kick_flag_end", 10);
 
         const auto motion_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
-        motion_start_sub_ = create_subscription<humanoid_interfaces::msg::MotionOperator>(
-            "motion_operator", motion_qos, [this](const humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
-                active_motion_num_ = msg->motion_num;
-                IK.set_motor_publish_enabled(false);
-                RCLCPP_INFO(get_logger(), "Paused IK motor commands for motion %d", msg->motion_num);
-            });
-        motion_end_sub_ = create_subscription<humanoid_interfaces::msg::MotionOperator>(
-            "motion_end", motion_qos, [this](const humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
-                if (msg->motion_end == 0 || msg->motion_num != active_motion_num_)
-                    return;
-                IK.set_motor_publish_enabled(true);
-                RCLCPP_INFO(get_logger(), "Resumed IK motor commands after motion %d", msg->motion_num);
-                active_motion_num_ = -1;
-            });
+        // motion_start_sub_ = create_subscription<humanoid_interfaces::msg::MotionOperator>(
+        //     "motion_operator", motion_qos, [this](const humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
+        //         active_motion_num_ = msg->motion_num;
+        //         IK.set_motor_publish_enabled(false);
+        //         RCLCPP_INFO(get_logger(), "Paused IK motor commands for motion %d", msg->motion_num);
+        //     });
+        // motion_end_sub_ = create_subscription<humanoid_interfaces::msg::MotionOperator>(
+        //     "motion_end", motion_qos, [this](const humanoid_interfaces::msg::MotionOperator::SharedPtr msg) {
+        //         if (msg->motion_end == 0 || msg->motion_num != active_motion_num_)
+        //             return;
+        //         IK.set_motor_publish_enabled(true);
+        //         RCLCPP_INFO(get_logger(), "Resumed IK motor commands after motion %d", msg->motion_num);
+        //         active_motion_num_ = -1;
+        //     });
     }
 
     // MSG //
@@ -481,8 +481,8 @@ class IKwalk : public rclcpp::Node
     std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::Tune2IkMsg>> Tune2ik_Sub;
     std::shared_ptr<rclcpp::Subscription<humanoid_interfaces::msg::ZmpMsg>> Zmp_Sub;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr kick_flag_sub_;
-    rclcpp::Subscription<humanoid_interfaces::msg::MotionOperator>::SharedPtr motion_start_sub_;
-    rclcpp::Subscription<humanoid_interfaces::msg::MotionOperator>::SharedPtr motion_end_sub_;
+    // rclcpp::Subscription<humanoid_interfaces::msg::MotionOperator>::SharedPtr motion_start_sub_;
+    // rclcpp::Subscription<humanoid_interfaces::msg::MotionOperator>::SharedPtr motion_end_sub_;
     int32_t active_motion_num_ = -1;
 
     string kick_flag_msg_ = "";
